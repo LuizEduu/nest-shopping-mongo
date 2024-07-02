@@ -1,6 +1,5 @@
 import { InMemoryCustomersRepository } from 'test/repositories/in-memory-customers-repository'
 import { CreateCustomerUseCase } from './create-customer'
-import { makeCustomer } from 'test/factories/make-customer'
 
 describe('Create customer use case', () => {
   let customersRepository: InMemoryCustomersRepository
@@ -12,24 +11,19 @@ describe('Create customer use case', () => {
   })
 
   it('should be able to create a new customer', async () => {
-    const customer = makeCustomer({
+    const { isLeft, isRight, value } = await sut.execute({
       name: 'John Doe',
-      email: 'JohnDoe@example.com',
-    })
-
-    await customersRepository.create(customer)
-
-    await sut.execute({
-      name: customer.name,
-      birthDate: customer.birthDate,
-      email: customer.email,
-      password: customer.password,
+      birthDate: new Date(1998, 5, 11),
+      email: 'John Doe@example.com',
+      password: 'password',
     })
 
     const customerCreated = customersRepository.customers[0]
 
+    expect(isLeft()).toBe(false)
+    expect(isRight()).toBe(true)
     expect(customersRepository.customers).toHaveLength(1)
-    expect(customerCreated.id).toEqual(customer.email)
-    expect(customerCreated.email).toEqual(customer.email)
+    expect(customerCreated.id).toEqual(value?.customer.id)
+    expect(customerCreated.email).toEqual(value?.customer.email)
   })
 })

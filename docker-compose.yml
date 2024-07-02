@@ -1,0 +1,24 @@
+services:
+  mongodb:
+    image: bitnami/mongodb:latest
+    container_name: mongodb
+    environment:
+      - MONGODB_ROOT_USER=docker
+      - MONGODB_ROOT_PASSWORD=docker
+      - MONGODB_USERNAME=docker
+      - MONGODB_PASSWORD=docker
+      - MONGODB_DATABASE=nest-mongo
+    ports:
+      - '27017:27017'
+    volumes:
+      - mongodb_data:/bitnami/mongodb
+    networks:
+      - local_network
+
+volumes:
+  mongodb_data:
+    driver: local
+
+networks:
+  local_network:
+    driver: bridge

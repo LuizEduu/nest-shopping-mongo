@@ -1,6 +1,7 @@
 import { Either, right } from '@/core/either'
 import { Customer } from '../../enterprise/entities/customer'
 import { CustomersRepository } from '../repositories/customers-repository'
+import { Injectable } from '@nestjs/common'
 
 type createCustomerRequest = {
   name: string
@@ -15,7 +16,7 @@ type createCustomerResponse = Either<
     customer: Customer
   }
 >
-
+@Injectable()
 export class CreateCustomerUseCase {
   constructor(private customersRepository: CustomersRepository) {}
 

@@ -9,6 +9,7 @@ import {
 } from '@nestjs/common'
 import { z } from 'zod'
 import { HttpCustomerPresenter } from '../presenters/http-customer-presenter'
+import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 
 const createCustomerSchema = z.object({
   name: z.string(),
@@ -25,7 +26,10 @@ export class CreateCustomerController {
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
-  async handle(@Body() body: CreateCustomerBodySchema) {
+  async handle(
+    @Body(new ZodValidationPipe(createCustomerSchema))
+    body: CreateCustomerBodySchema,
+  ) {
     const { name, email, birthDate, password } = body
 
     const result = await this.useCase.execute({

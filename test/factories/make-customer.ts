@@ -5,7 +5,7 @@ import {
 
 import { faker } from '@faker-js/faker'
 
-export function makeCustomer(overide: Partial<CustomerProps>): Customer {
+export function makeCustomer(overide: Partial<CustomerProps> = {}): Customer {
   return Customer.create({
     name: faker.person.fullName(),
     email: faker.internet.email(),

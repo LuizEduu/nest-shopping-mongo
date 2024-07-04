@@ -5,6 +5,8 @@ import { Customer as CustomerMongoose } from '../models/customer-schema'
 import { Customer } from '@/domain/shopping/enterprise/entities/customer'
 import { Injectable } from '@nestjs/common'
 import { MongooseCustomersMapper } from '../mappers/mongoose-customers-mapper'
+import { PaginationParams } from '@/core/repositories/pagination-params'
+import { CustomerNoPassword } from '@/domain/shopping/enterprise/entities/value-objects/customer-no-password'
 
 @Injectable()
 export class MongooseCustomersRepository implements CustomersRepository {
@@ -19,5 +21,18 @@ export class MongooseCustomersRepository implements CustomersRepository {
     const model = new this.CustomersModel(customerMongoose)
 
     await model.save()
+  }
+
+  async findAll({
+    page,
+    pageSize,
+  }: PaginationParams): Promise<CustomerNoPassword[]> {
+    const skip = (page - 1) * pageSize
+
+    const customers = await this.CustomersModel.find()
+      .skip(skip)
+      .limit(pageSize)
+
+    return customers.map(MongooseCustomersMapper.toCustomerNoPassword)
   }
 }

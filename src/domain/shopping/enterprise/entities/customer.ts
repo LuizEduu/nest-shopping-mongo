@@ -68,4 +68,8 @@ export class Customer extends AggregateRoot<CustomerProps> {
   get updatedAt(): Date | null | undefined {
     return this.props.updatedAt
   }
+
+  touch() {
+    this.props.updatedAt = new Date()
+  }
 }

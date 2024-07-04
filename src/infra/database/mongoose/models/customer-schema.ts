@@ -6,27 +6,27 @@ import { HydratedDocument } from 'mongoose'
 })
 export class Customer {
   @Prop({ required: true })
-  name?: string
+  name!: string
 
   @Prop({ required: true })
-  birthDate?: Date
+  birthDate!: Date
+
+  @Prop({ required: true, unique: true })
+  email!: string
 
   @Prop({ required: true })
-  email?: string
-
-  @Prop({ required: true })
-  password?: string
+  password!: string
 
   @Prop({
     name: 'created_at',
   })
-  createdAt?: Date
+  createdAt!: Date
 
   @Prop({
     name: 'updated_at',
     type: Date,
   })
-  updatedAt?: Date | null | undefined
+  updatedAt!: Date | null | undefined
 }
 
 export type CustomerDocument = HydratedDocument<Customer>

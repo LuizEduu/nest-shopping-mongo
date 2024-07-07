@@ -13,7 +13,10 @@ import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
 
 const createCustomerSchema = z.object({
   name: z.string(),
-  birthDate: z.date(),
+  birthDate: z
+    .string()
+    .date()
+    .transform((value) => new Date(value)),
   email: z.string().email(),
   password: z.string(),
 })

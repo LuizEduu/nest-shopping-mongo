@@ -5,6 +5,7 @@ export class HttpCustomerPresenter {
     return {
       id: customer.id.toString(),
       name: customer.name,
+      email: customer.email,
       birthDate: customer.birthDate,
       createdAt: customer.createdAt,
       updatedAt: customer.updatedAt,

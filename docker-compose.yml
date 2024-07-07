@@ -15,8 +15,27 @@ services:
     networks:
       - local_network
 
+  mongodb_test:
+    image: bitnami/mongodb:latest
+    container_name: mongodb_test
+    environment:
+      - MONGODB_ROOT_USER=test
+      - MONGODB_ROOT_PASSWORD=test
+      - MONGODB_USERNAME=test
+      - MONGODB_PASSWORD=test
+      - MONGODB_DATABASE=nest-mongo-test
+    ports:
+      - '27018:27017'
+    volumes:
+      - mongodb_data_test:/bitnami/mongodb
+    networks:
+      - local_network
+  
+
 volumes:
   mongodb_data:
+    driver: local
+  mongodb_data_test:
     driver: local
 
 networks:

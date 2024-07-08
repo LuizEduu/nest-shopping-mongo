@@ -1,6 +1,6 @@
 import { InMemoryCustomersRepository } from 'test/repositories/in-memory-customers-repository'
 import { CreateCustomerUseCase } from './create-customer'
-import { InvalidNameLengthError } from '../../enterprise/errors/invalid-name-length'
+import { InvalidNameLengthError } from '../../enterprise/errors'
 
 describe('Create customer use case', () => {
   let customersRepository: InMemoryCustomersRepository
@@ -31,16 +31,22 @@ describe('Create customer use case', () => {
   })
 
   it('should not be able to create a new customer when name is invalid', async () => {
-    const { isLeft, isRight, value } = await sut.execute({
+    const result = await sut.execute({
       name: 'a'.repeat(256),
       birthDate: new Date(1998, 5, 11),
       email: 'John Doe@example.com',
       password: 'password',
     })
 
-    expect(isLeft()).toBe(true)
-    expect(isRight()).toBe(false)
-    expect(value).toBeInstanceOf(InvalidNameLengthError)
+    expect(result.isRight()).toBe(false)
+    expect(result.isLeft()).toBe(true)
+    expect(result.value).toMatchObject(
+      expect.objectContaining({
+        errors: expect.arrayContaining([
+          new InvalidNameLengthError('name length is bigger to 255 characters'),
+        ]),
+      }),
+    )
     expect(customersRepository.customers).toHaveLength(0)
   })
 })

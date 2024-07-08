@@ -1,3 +1,4 @@
+import { ValidationHandler } from '../validation/validation-handler'
 import { UniqueEntityID } from './unique-entity-id'
 
 export abstract class Entity<Props> {
@@ -24,4 +25,6 @@ export abstract class Entity<Props> {
 
     return false
   }
+
+  abstract validate(handler: ValidationHandler): void
 }

@@ -1,9 +1,8 @@
 import { AggregateRoot } from '@/core/entities/aggregate-root'
 import { UniqueEntityID } from '@/core/entities/unique-entity-id'
 import { Optional } from '@/core/types/optional'
-import { InvalidNameLengthError } from '../errors/invalid-name-length'
-import { InvalidEmail } from '../errors/invalid-email'
-import { InvalidBirthDate } from '../errors/invalid-birth-date'
+import { ValidationHandler } from '@/core/validation/validation-handler'
+import { CustomerValidator } from './validation/customer-validator'
 
 export type CustomerProps = {
   name: string
@@ -75,24 +74,10 @@ export class Customer extends AggregateRoot<CustomerProps> {
       id,
     )
 
-    customer.validate()
-
     return customer
   }
 
-  validate() {
-    if (this.name.length > 255) {
-      throw new InvalidNameLengthError(
-        `name length is bigger to 255 characters`,
-      )
-    }
-
-    if (`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$`.match(this.email)) {
-      throw new InvalidEmail()
-    }
-
-    if (this.birthDate > new Date()) {
-      throw new InvalidBirthDate()
-    }
+  validate(handler: ValidationHandler) {
+    new CustomerValidator(this, handler).validate()
   }
 }

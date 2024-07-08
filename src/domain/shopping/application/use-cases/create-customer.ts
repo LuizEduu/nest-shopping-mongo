@@ -3,6 +3,9 @@ import { Customer } from '../../enterprise/entities/customer'
 import { CustomersRepository } from '../repositories/customers-repository'
 import { Injectable } from '@nestjs/common'
 import { UseCase } from '@/core/use-case'
+import { InvalidNameLengthError } from '../../enterprise/errors/invalid-name-length'
+import { InvalidEmail } from '../../enterprise/errors/invalid-email'
+import { InvalidBirthDate } from '../../enterprise/errors/invalid-birth-date'
 
 type createCustomerRequest = {
   name: string
@@ -12,7 +15,7 @@ type createCustomerRequest = {
 }
 
 type createCustomerResponse = Either<
-  null,
+  InvalidNameLengthError | InvalidEmail | InvalidBirthDate,
   {
     customer: Customer
   }

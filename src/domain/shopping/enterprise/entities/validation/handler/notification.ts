@@ -3,7 +3,7 @@ import { ValidationHandler } from '@/core/validation/validation-handler'
 export class Notification implements ValidationHandler {
   private readonly errors: Error[]
 
-  constructor(errors: Error[]) {
+  protected constructor(errors: Error[]) {
     this.errors = errors
   }
 

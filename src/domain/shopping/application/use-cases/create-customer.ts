@@ -3,7 +3,7 @@ import { Customer } from '../../enterprise/entities/customer'
 import { CustomersRepository } from '../repositories/customers-repository'
 import { Injectable } from '@nestjs/common'
 import { UseCase } from '@/core/use-case'
-import { Notification } from '../../enterprise/entities/validation/handler/Notification'
+import { Notification } from '../../enterprise/entities/validation/handler/notification'
 
 type createCustomerRequest = {
   name: string

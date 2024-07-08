@@ -3,8 +3,8 @@ import { Customer } from '../customer'
 import { ValidationHandler } from '@/core/validation/validation-handler'
 import {
   InvalidNameLengthError,
-  InvalidEmail,
-  InvalidBirthDate,
+  InvalidEmailError,
+  InvalidBirthDateError,
 } from '../../errors'
 
 export class CustomerValidator extends Validator {
@@ -23,15 +23,15 @@ export class CustomerValidator extends Validator {
     }
 
     if (
-      `^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$`.match(
+      !/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+.[a-zA-Z]{2,}$/.test(
         this.customer.email,
       )
     ) {
-      this.validationHandler().add(new InvalidEmail())
+      this.validationHandler().add(new InvalidEmailError())
     }
 
     if (this.customer.birthDate > new Date()) {
-      this.validationHandler().add(new InvalidBirthDate())
+      this.validationHandler().add(new InvalidBirthDateError())
     }
   }
 }

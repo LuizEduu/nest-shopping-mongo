@@ -2,6 +2,7 @@ import { FetchCustomersUseCase } from '@/domain/shopping/application/use-cases/f
 import { Controller, Get, Query } from '@nestjs/common'
 import { z } from 'zod'
 import { ZodValidationPipe } from '../pipes/zod-validation-pipe'
+import { HttpCustomerPresenter } from '../presenters/http-customer-presenter'
 
 const pageQueryParamSchema = z
   .string()
@@ -27,11 +28,13 @@ export class FetchCustomersController {
     @Query('pageSize', new ZodValidationPipe(pageSizeQueryParamSchema))
     pageSize: PageSizeQueryParamSchema,
   ) {
-    const customers = await this.useCase.execute({
+    const result = await this.useCase.execute({
       page,
       pageSize,
     })
 
-    return customers
+    return result.value?.customers.map(
+      HttpCustomerPresenter.customerNoPasswordToHTTP,
+    )
   }
 }

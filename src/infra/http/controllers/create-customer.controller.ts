@@ -42,6 +42,8 @@ export class CreateCustomerController {
       password,
     })
 
+    console.log(result.value)
+
     if (result.isLeft()) {
       throw new BadRequestException('error to create a customer')
     }

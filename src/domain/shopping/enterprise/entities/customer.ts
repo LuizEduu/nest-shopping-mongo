@@ -8,7 +8,7 @@ export type CustomerProps = {
   name: string
   birthDate: Date
   email: string
-  password: string
+  password: string | null
   createdAt: Date
   updatedAt?: Date | null | undefined
 }
@@ -38,7 +38,7 @@ export class Customer extends AggregateRoot<CustomerProps> {
     this.props.email = email
   }
 
-  get password() {
+  get password(): string | null {
     return this.props.password
   }
 
@@ -63,12 +63,13 @@ export class Customer extends AggregateRoot<CustomerProps> {
   }
 
   static create(
-    props: Optional<CustomerProps, 'createdAt' | 'updatedAt'>,
+    props: Optional<CustomerProps, 'createdAt' | 'updatedAt' | 'password'>,
     id?: UniqueEntityID,
   ) {
     const customer = new Customer(
       {
         ...props,
+        password: props.password ?? null,
         createdAt: props.createdAt ?? new Date(),
       },
       id,

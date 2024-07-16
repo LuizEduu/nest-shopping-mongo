@@ -30,4 +30,22 @@ export class InMemoryCustomersRepository implements CustomersRepository {
       )
       .slice((page - 1) * pageSize, page * pageSize)
   }
+
+  async findOne(id: string): Promise<Customer | null> {
+    const customer = this.customers.find(
+      (customer) => customer.id.toString() === id,
+    )
+
+    return customer ?? null
+  }
+
+  async save(customer: Customer): Promise<void> {
+    const customerIndex = this.customers.findIndex(
+      (c) => c.id.toString() === customer.id.toString(),
+    )
+
+    this.customers.splice(customerIndex, 1)
+
+    this.customers[customerIndex] = customer
+  }
 }

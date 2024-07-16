@@ -4,6 +4,7 @@ import { Either, left, right } from '@/core/either'
 import { CustomerNotFound } from './errors/customer-not-found'
 import { Injectable } from '@nestjs/common'
 import { Notification } from '../../enterprise/entities/validation/handler/notification'
+import { Customer } from '../../enterprise/entities/customer'
 
 type UpdateCustomerRequest = {
   id: string
@@ -12,7 +13,7 @@ type UpdateCustomerRequest = {
   birthDate: Date
 }
 
-type UpdateCustomerResponse = Either<CustomerNotFound, null>
+type UpdateCustomerResponse = Either<Notification, null>
 
 @Injectable()
 export class UpdateCustomerUseCase
@@ -26,20 +27,30 @@ export class UpdateCustomerUseCase
     email,
     birthDate,
   }: UpdateCustomerRequest): Promise<UpdateCustomerResponse> {
-    const customer = await this.customersRepository.findOne(id)
-
-    if (!customer) {
-      return left(new CustomerNotFound())
-    }
-
-    customer.name = name
-    customer.email = email
-    customer.birthDate = birthDate
-    customer.touch()
+    const customerNotExists = await this.customersRepository.findOne(id)
 
     const notification = Notification.create()
 
+    if (!customerNotExists) {
+      notification.add(new CustomerNotFound())
+      return left(notification)
+    }
+
+    const customer = Customer.create(
+      {
+        name,
+        birthDate,
+        email,
+      },
+      customerNotExists?.id,
+    )
+    customer.touch()
+
     customer.validate(notification)
+
+    if (notification.hasError()) {
+      return left(notification)
+    }
 
     await this.customersRepository.save(customer)
 

@@ -45,20 +45,24 @@ describe('Update customer(E2E)', () => {
       birthDate: new Date(1998, 4, 4),
     })
 
+    const updatePayload = {
+      name: 'John Doe updated name',
+      email: 'johndoe202223332@example.com.br',
+      birthDate: '2002-10-15',
+    }
+
     const response = await request(app.getHttpServer())
       .put(`/customers/${customer.id.toString()}`)
-      .send({
-        name: 'John Doe updated name',
-        email: 'johndoe202223332@example.com.br',
-        birthDate: '2002-10-15',
-      })
+      .send(updatePayload)
 
     const updatedCustomer = await customerModel.findById(customer.id.toString())
 
-    expect(updatedCustomer?.name).toEqual('John Doe updated name')
-    expect(updatedCustomer?.email).toEqual('johndoe2022@example.com.br')
+    expect(updatedCustomer?.name).toEqual(updatePayload.name)
+    expect(updatedCustomer?.email).toEqual(updatePayload.email)
+    expect(updatedCustomer?.birthDate.getTime()).toBeGreaterThan(
+      customer.birthDate.getTime(),
+    )
     expect(updatedCustomer?.updatedAt).toBeTruthy()
-
     expect(response.status).toBe(204)
   })
 })

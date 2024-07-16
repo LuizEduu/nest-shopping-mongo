@@ -13,6 +13,7 @@ export class MongooseCustomersMapper {
       birthDate: customer.birthDate,
       password: customer.password,
       createdAt: customer.createdAt,
+      updatedAt: customer.updatedAt ?? null,
     }
   }
 

@@ -4,10 +4,20 @@ import { CreateCustomerUseCase } from '@/domain/shopping/application/use-cases/c
 import { DatabaseModule } from '../database/database.module'
 import { FetchCustomersController } from './controllers/fetch-customers.controller'
 import { FetchCustomersUseCase } from '@/domain/shopping/application/use-cases/fetch-customers'
+import { UpdateCustomerController } from './controllers/update-customer.controller'
+import { UpdateCustomerUseCase } from '@/domain/shopping/application/use-cases/update-customer'
 
 @Module({
   imports: [DatabaseModule],
-  controllers: [CreateCustomerController, FetchCustomersController],
-  providers: [CreateCustomerUseCase, FetchCustomersUseCase],
+  controllers: [
+    CreateCustomerController,
+    FetchCustomersController,
+    UpdateCustomerController,
+  ],
+  providers: [
+    CreateCustomerUseCase,
+    FetchCustomersUseCase,
+    UpdateCustomerUseCase,
+  ],
 })
 export class HttpModule {}

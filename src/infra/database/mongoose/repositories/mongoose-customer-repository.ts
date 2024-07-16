@@ -18,7 +18,10 @@ export class MongooseCustomersRepository implements CustomersRepository {
   async create(customer: Customer): Promise<void> {
     const customerMongoose = MongooseCustomersMapper.toMongoose(customer)
 
-    const model = new this.CustomersModel(customerMongoose)
+    const model = new this.CustomersModel({
+      ...customerMongoose,
+      _id: customerMongoose.id,
+    })
 
     await model.save()
   }
@@ -34,5 +37,23 @@ export class MongooseCustomersRepository implements CustomersRepository {
       .limit(pageSize)
 
     return customers.map(MongooseCustomersMapper.toCustomerNoPassword)
+  }
+
+  async findOne(id: string): Promise<Customer | null> {
+    const customer = await this.CustomersModel.findById(id)
+
+    if (!customer) {
+      return null
+    }
+
+    return MongooseCustomersMapper.toDomain(customer)
+  }
+
+  async save(customer: Customer): Promise<void> {
+    const customerMongoose = MongooseCustomersMapper.toMongoose(customer)
+
+    await this.CustomersModel.findByIdAndUpdate(customerMongoose.id, {
+      ...customerMongoose,
+    })
   }
 }

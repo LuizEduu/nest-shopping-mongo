@@ -5,4 +5,6 @@ import { CustomerNoPassword } from '../../enterprise/entities/value-objects/cust
 export abstract class CustomersRepository {
   abstract create(customer: Customer): Promise<void>
   abstract findAll(params: PaginationParams): Promise<CustomerNoPassword[]>
+  abstract findOne(id: string): Promise<Customer | null>
+  abstract save(customer: Customer): Promise<void>
 }

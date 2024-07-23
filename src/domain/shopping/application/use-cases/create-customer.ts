@@ -4,6 +4,7 @@ import { CustomersRepository } from '../repositories/customers-repository'
 import { Injectable } from '@nestjs/common'
 import { UseCase } from '@/core/use-case'
 import { Notification } from '../../enterprise/entities/validation/handler/notification'
+import { Inviter } from '../email/inviter'
 
 type createCustomerRequest = {
   name: string
@@ -22,7 +23,10 @@ type createCustomerResponse = Either<
 export class CreateCustomerUseCase
   implements UseCase<createCustomerRequest, Promise<createCustomerResponse>>
 {
-  constructor(private customersRepository: CustomersRepository) {}
+  constructor(
+    private customersRepository: CustomersRepository,
+    private invite: Inviter,
+  ) {}
 
   async execute({
     name,
@@ -46,6 +50,8 @@ export class CreateCustomerUseCase
     }
 
     await this.customersRepository.create(customer)
+
+    await this.invite.send(customer.email)
 
     return right({
       customer,

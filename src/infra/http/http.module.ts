@@ -6,9 +6,10 @@ import { FetchCustomersController } from './controllers/fetch-customers.controll
 import { FetchCustomersUseCase } from '@/domain/shopping/application/use-cases/fetch-customers'
 import { UpdateCustomerController } from './controllers/update-customer.controller'
 import { UpdateCustomerUseCase } from '@/domain/shopping/application/use-cases/update-customer'
+import { EmailModule } from '../email/email.module'
 
 @Module({
-  imports: [DatabaseModule],
+  imports: [DatabaseModule, EmailModule],
   controllers: [
     CreateCustomerController,
     FetchCustomersController,

@@ -4,10 +4,17 @@ import { Optional } from '@/core/types/optional'
 import { ValidationHandler } from '@/core/validation/validation-handler'
 import { CustomerValidator } from './validation/customer-validator'
 
+enum status {
+  active = 'active',
+  inValidation = 'inValidation',
+  deactive = 'deactive',
+}
+
 export type CustomerProps = {
   name: string
   birthDate: Date
   email: string
+  status: status
   password: string | null
   createdAt: Date
   updatedAt?: Date | null | undefined
@@ -38,6 +45,10 @@ export class Customer extends AggregateRoot<CustomerProps> {
     this.props.email = email
   }
 
+  get status() {
+    return this.props.status
+  }
+
   get password(): string | null {
     return this.props.password
   }
@@ -62,8 +73,17 @@ export class Customer extends AggregateRoot<CustomerProps> {
     this.props.updatedAt = new Date()
   }
 
+  activate() {
+    if (this.props.status === status.inValidation) {
+      this.props.status = status.active
+    }
+  }
+
   static create(
-    props: Optional<CustomerProps, 'createdAt' | 'updatedAt' | 'password'>,
+    props: Optional<
+      CustomerProps,
+      'createdAt' | 'updatedAt' | 'password' | 'status'
+    >,
     id?: UniqueEntityID,
   ) {
     const customer = new Customer(
@@ -71,6 +91,7 @@ export class Customer extends AggregateRoot<CustomerProps> {
         ...props,
         password: props.password ?? null,
         createdAt: props.createdAt ?? new Date(),
+        status: status.inValidation,
       },
       id,
     )
